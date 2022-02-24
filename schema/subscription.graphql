@@ -1,0 +1,22 @@
+"""
+Событие с новым сообщением.
+"""
+type MessageEvent {
+  chat: Chat!
+  message: Message!
+}
+
+union Event = MessageEvent
+
+type Subscription {
+  """
+  Подписка на новые события для текущего пользователя.
+  """
+  newEvent: Event!
+
+  """
+  Подписка на новые сообщения в чате.
+  Если чата с таким `id` нет, то ошибка.
+  """
+  newMessage(chatId: ID!): Message!
+}
