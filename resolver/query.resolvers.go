@@ -36,6 +36,29 @@ func (r *queryResolver) SignIn(ctx context.Context, login string, password strin
 	return &sign, nil
 }
 
+func (r *queryResolver) Chat(ctx context.Context, id string) (*model.Chat, error) {
+	r.ChatsMu.RLock()
+	defer r.ChatsMu.RUnlock()
+
+	chat, ok := r.ChatsByID[id]
+
+	if !ok {
+		return nil, ErrChatDoesnotExists
+	}
+
+	if chat.ID == model.SpamChatID {
+		return chat, nil
+	}
+
+	user := GetCurrentUserFrom(ctx)
+
+	if _, ok := chat.AllMembersByLogin[user.Login]; ok {
+		return chat, nil
+	}
+
+	return nil, ErrMembership
+}
+
 func (r *queryResolver) Chats(ctx context.Context, offset *int, first *int) ([]*model.Chat, error) {
 	begin := *offset
 	count := *first
