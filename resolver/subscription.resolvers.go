@@ -39,13 +39,7 @@ func (r *subscriptionResolver) NewEvent(ctx context.Context) (<-chan model.Event
 }
 
 func (r *subscriptionResolver) NewMessage(ctx context.Context, chatID string) (<-chan *model.Message, error) {
-	var login string
-
-	user := GetCurrentUserFrom(ctx)
-
-	if user != nil {
-		login = user.Login
-	}
+	login := server.GetSignatureFrom(ctx)
 
 	r.ChatsMu.RLock()
 	chat, ok := r.ChatsByID[chatID]

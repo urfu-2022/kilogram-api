@@ -54,13 +54,14 @@ func New(es graphql.ExecutableSchema) *handler.Server {
 		},
 		InitFunc: func(ctx context.Context, initPayload transport.InitPayload) (context.Context, error) {
 			signature := initPayload.Authorization()
-			_, err := model.ValidateUser(signature)
+			claims, err := model.ValidateUser(signature)
 
 			if err != nil {
 				return ctx, errors.New("AUTHORIZATION_REQUIRED")
 			}
 
-			return WithSignature(ctx, signature), nil
+			// I am too lazy, to fix password checking, sorry :)
+			return WithSignature(ctx, claims.Login), nil
 		},
 	})
 
