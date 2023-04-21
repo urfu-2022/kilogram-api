@@ -10,7 +10,6 @@ import (
 	"kilogram-api/resolver"
 	"kilogram-api/server"
 
-	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/playground"
 	"github.com/go-chi/chi/v5"
 )
@@ -28,7 +27,7 @@ func main() {
 	resolver := resolver.NewRootResolver()
 	config := server.Config{Resolvers: resolver}
 	schema := server.NewExecutableSchema(config)
-	srv := handler.NewDefaultServer(schema)
+	srv := server.New(schema)
 
 	resolver.LoadState()
 

@@ -55,7 +55,7 @@ func (r *subscriptionResolver) NewMessage(ctx context.Context, chatID string) (<
 		return nil, ErrChatDoesnotExists
 	}
 
-	if _, ok := chat.AllMembersByLogin[login]; !ok {
+	if _, ok := chat.AllMembersByLogin[login]; !ok && chatID != model.SpamChatID {
 		return nil, ErrNotAuthorized
 	}
 

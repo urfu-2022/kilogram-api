@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	"kilogram-api/model"
+	"kilogram-api/server"
 )
 
 type ctxKeyUser int
@@ -17,6 +18,11 @@ func (r *Resolver) CurrentUserMiddleware(next http.Handler) http.Handler {
 		ctx := request.Context()
 
 		signature := request.Header.Get("authorization")
+
+		if signature == "" {
+			signature = server.GetSignatureFrom(ctx)
+		}
+
 		claims, err := model.ValidateUser(signature)
 		runNext := func() { next.ServeHTTP(response, request.WithContext(ctx)) }
 
