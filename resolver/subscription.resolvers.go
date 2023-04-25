@@ -7,7 +7,8 @@ import (
 	"context"
 	"kilogram-api/model"
 	"kilogram-api/server"
-	"math/rand"
+
+	"github.com/google/uuid"
 )
 
 func (r *subscriptionResolver) NewEvent(ctx context.Context) (<-chan model.Event, error) {
@@ -53,7 +54,8 @@ func (r *subscriptionResolver) NewMessage(ctx context.Context, chatID string) (<
 		return nil, ErrNotAuthorized
 	}
 
-	observerID := string(rand.Int31()) // nolint: gosec
+	observerID := uuid.New().String()
+
 	events := make(chan *model.Message, 1)
 
 	go func() {
