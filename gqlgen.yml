@@ -1,22 +1,42 @@
+# Where are all the schema files located?
 schema:
   - schema/*.graphql
 
+# Where should the generated server code go?
 exec:
   filename: server/generated.go
-  package: server
 
+# Where should any generated models go?
 model:
   filename: model/generated.go
   package: model
 
+# Where should the resolver implementations go?
 resolver:
   layout: follow-schema
   dir: resolver
   package: resolver
 
+# Optional: turn on to skip generation of ComplexityRoot struct content and Complexity function
+omit_complexity: true
+
+# Optional: turn on to exclude root models such as Query and Mutation from the generated models file.
+omit_root_models: true
+
+# Optional: set to skip running `go mod tidy` when generating server code
+skip_mod_tidy: false
+
+# Where are all the models located?
 autobind:
   - "kilogram-api/model"
 
+struct_tag: gqlgen
+
+# This section declares type mapping between the GraphQL and go type systems
+#
+# The first line in each type will be used as defaults for resolver arguments and
+# modelgen, the others will be allowed when binding to fields. Configure them to
+# your liking
 models:
   ID:
     model:

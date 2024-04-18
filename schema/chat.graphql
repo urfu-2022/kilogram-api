@@ -37,10 +37,16 @@ type Chat {
   members(offset: Int = 0, first: Int = 10): [User!]!
 
   """
+  Данные по конкретному сообщению.
+  Если сообщение не найдено, то вернётся `null`.
+  """
+  message(id: ID!): Message
+
+  """
   Сообщения в чате.
   Работает пагинация в порядке убывания `createdAt`.
   """
-  messages(offset: Int = 0, first: Int = 10): [Message!]!
+  messages(offset: Int = 0, first: Int = 10, base: ID): [Message!]!
 
   """
   Произвольные мета-данные чата.

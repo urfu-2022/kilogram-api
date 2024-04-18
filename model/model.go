@@ -64,11 +64,35 @@ func (c *Chat) Members(offset, first *int) []*User {
 	return c.AllMembers[begin : begin+count]
 }
 
-func (c *Chat) Messages(offset, first *int) []*Message {
+func (c *Chat) Message(id string) *Message {
 	c.M.RLock()
 	defer c.M.RUnlock()
 
-	begin := *offset
+	for _, message := range c.AllMessages {
+		if message.ID == id {
+			return message
+		}
+	}
+
+	return nil
+}
+
+func (c *Chat) Messages(offset, first *int, base *string) []*Message {
+	c.M.RLock()
+	defer c.M.RUnlock()
+
+	var begin int
+
+	if base != nil {
+		for i := 0; i < len(c.AllMessages); i++ {
+			if c.AllMessages[len(c.AllMessages)-i-1].ID == *base {
+				begin = i
+				break
+			}
+		}
+	}
+
+	begin += *offset
 	count := *first
 
 	if begin >= len(c.AllMessages) {
