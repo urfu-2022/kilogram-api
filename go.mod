@@ -1,6 +1,6 @@
 module kilogram-api
 
-go 1.22.2
+go 1.22
 
 require (
 	github.com/99designs/gqlgen v0.17.45

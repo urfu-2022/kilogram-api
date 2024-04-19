@@ -51,6 +51,8 @@ func main() {
 
 	router := chi.NewRouter()
 	router.Get("/", playground.Handler("GraphQL playground", "/query"))
+	router.Get("/static/{file}", server.GetFile)
+	router.Post("/upload", server.UploadFile)
 	router.With(server.CORS, resolver.CurrentUserMiddleware).Handle("/query", srv)
 
 	log.Printf("running on %s", endpoint)
