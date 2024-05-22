@@ -385,12 +385,8 @@ func (r *mutationResolver) SendMessage(ctx context.Context, chatID string, text 
 	chat.AllMessagesByID[message.ID] = message
 	chat.M.Unlock()
 
-	fmt.Println(chat.Observers)
-
 	for _, observer := range chat.Observers {
-		if user == nil || message.Author == nil || observer.Login != message.Author.Login {
-			observer.Message <- message
-		}
+		observer.Message <- message
 	}
 
 	return message, nil
