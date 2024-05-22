@@ -50,13 +50,9 @@ func (r *queryResolver) Chat(ctx context.Context, id string) (*model.Chat, error
 		return nil, ErrChatDoesnotExists
 	}
 
-	if chat.ID == model.SpamChatID {
-		return chat, nil
-	}
-
 	user := GetCurrentUserFrom(ctx)
 
-	if _, ok := chat.AllMembersByLogin[user.Login]; ok {
+	if chat.HasMember(user) {
 		return chat, nil
 	}
 
@@ -92,25 +88,25 @@ func (r *queryResolver) Chats(ctx context.Context, offset *int, first *int) ([]*
 		count = len(chats) - begin
 	}
 
-	chats = chats[begin:]
-
 	result := make([]*model.Chat, 0, count)
 
-	for i := 0; len(result) < count && i < len(chats); i++ {
-		if chats[i].ID == model.SpamChatID {
-			result = append(result, chats[i])
+	for _, chat := range chats {
+		if !chat.HasMember(user) {
+			continue
+		}
+
+		if begin != 0 {
+			begin--
 
 			continue
 		}
 
-		if user == nil {
-			continue
-		}
+		result = append(result, chat)
 
-		if _, ok := chats[i].AllMembersByLogin[user.Login]; ok {
-			result = append(result, chats[i])
+		count--
 
-			continue
+		if count == 0 {
+			break
 		}
 	}
 

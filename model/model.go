@@ -64,6 +64,20 @@ func (c *Chat) Members(offset, first *int) []*User {
 	return c.AllMembers[begin : begin+count]
 }
 
+func (c *Chat) HasMember(user *User) bool {
+	if c.ID == SpamChatID {
+		return true
+	}
+
+	if user == nil {
+		return false
+	}
+
+	_, ok := c.AllMembersByLogin[user.Login]
+
+	return ok
+}
+
 func (c *Chat) Message(id string) *Message {
 	c.M.RLock()
 	defer c.M.RUnlock()

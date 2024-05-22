@@ -361,10 +361,8 @@ func (r *mutationResolver) SendMessage(ctx context.Context, chatID string, text 
 		authorLogin = &user.Login
 	}
 
-	if user != nil && chat.ID != model.SpamChatID {
-		if _, ok := chat.AllMembersByLogin[user.Login]; !ok {
-			return nil, ErrMembership
-		}
+	if !chat.HasMember(user) {
+		return nil, ErrMembership
 	}
 
 	if chat.Type == model.ChatTypeChannel && user != chat.Creator {
