@@ -18,7 +18,7 @@ func (r *subscriptionResolver) NewEvent(ctx context.Context) (<-chan model.Event
 		return nil, ErrNotAuthorized
 	}
 
-	events := make(chan model.Event, 1)
+	events := make(chan model.Event)
 
 	r.ChatsMu.RLock()
 	for _, chat := range r.Chats {
