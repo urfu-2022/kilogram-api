@@ -14,10 +14,6 @@ import (
 
 // NewEvent is the resolver for the newEvent field.
 func (r *subscriptionResolver) NewEvent(ctx context.Context) (<-chan model.Event, error) {
-	if GetCurrentUserFrom(ctx) == nil {
-		return nil, ErrNotAuthorized
-	}
-
 	events := make(chan model.Event)
 
 	r.ChatsMu.RLock()
